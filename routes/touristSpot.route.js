@@ -6,6 +6,6 @@ router
   .route("/:id")
   .get(touristSpotControllers.getTouristSpot)
   .patch(touristSpotControllers.patchTouristSpot)
-  .delete();
+  .delete(touristSpotControllers.deleteTouristSpot);
 
 module.exports = router;

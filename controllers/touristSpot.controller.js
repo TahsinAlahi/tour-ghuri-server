@@ -77,6 +77,24 @@ async function getTouristSpot(req, res, next) {
   }
 }
 
+// delete a book
+async function deleteTouristSpot(req, res, next) {
+  const { id } = req.params;
+  try {
+    const isValid = ObjectId.isValid(id);
+    if (!isValid) throw createHttpErrors(404, "Invalid ID");
+
+    const data = await touristSpotCollection.deleteOne({
+      _id: ObjectId.createFromHexString(id),
+    });
+    if (!data) throw createHttpErrors(404, "Tourist spot not found");
+
+    res.status(200);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // patching a tourist spot
 async function patchTouristSpot(req, res, next) {
   const { id } = req.params;
@@ -132,4 +150,6 @@ module.exports = {
   getTouristSpot,
   patchTouristSpot,
   createTouristSpot,
+  deleteTouristSpot,
+  deleteTouristSpot,
 };
