@@ -77,6 +77,19 @@ async function getTouristSpot(req, res, next) {
   }
 }
 
+// get top tourist spot
+async function getRandomTouristSpots(req, res, next) {
+  try {
+    const data = await touristSpotCollection
+      .aggregate([{ $sample: { size: 6 } }])
+      .toArray();
+
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // delete a book
 async function deleteTouristSpot(req, res, next) {
   const { id } = req.params;
@@ -152,4 +165,5 @@ module.exports = {
   createTouristSpot,
   deleteTouristSpot,
   deleteTouristSpot,
+  getRandomTouristSpots,
 };
