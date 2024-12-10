@@ -11,6 +11,8 @@ app.get("/", async (req, res) => {
   res.send("hello");
 });
 
+app.use("/api/tourist-spot", require("./routes/touristSpot.route"));
+
 app.get("*", (req, res, next) => {
   next(createHttpErrors(404, "Route not found"));
 });
