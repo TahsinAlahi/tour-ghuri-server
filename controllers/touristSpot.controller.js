@@ -12,6 +12,50 @@ async function getAllTouristSpots(req, res, next) {
   }
 }
 
+// post a tourist spot
+async function createTouristSpot(req, res, next) {
+  try {
+    const {
+      image,
+      touristSpotName,
+      countryName,
+      location,
+      shortDescription,
+      averageCost,
+      seasonality,
+      travelTime,
+      totalVisitorsPerYear,
+      userEmail,
+      userName,
+    } = req.body;
+
+    if (
+      !image ||
+      !touristSpotName ||
+      !countryName ||
+      !location ||
+      !userEmail ||
+      !userName ||
+      !averageCost ||
+      !seasonality ||
+      !travelTime ||
+      !totalVisitorsPerYear ||
+      !shortDescription
+    )
+      throw createHttpErrors(400, "Missing required fields");
+
+    const newTouristSpot = await touristSpotCollection.insertOne(req.body);
+    const returnData = {
+      _id: newTouristSpot.insertedId,
+      ...req.body,
+    };
+
+    res.status(201).json(returnData);
+  } catch (error) {
+    next(error);
+  }
+}
+
 // get a single tourist spot
 async function getTouristSpot(req, res, next) {
   const { id } = req.params;
@@ -83,4 +127,9 @@ async function patchTouristSpot(req, res, next) {
   }
 }
 
-module.exports = { getAllTouristSpots, getTouristSpot, patchTouristSpot };
+module.exports = {
+  getAllTouristSpots,
+  getTouristSpot,
+  patchTouristSpot,
+  createTouristSpot,
+};
