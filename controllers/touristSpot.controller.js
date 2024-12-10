@@ -33,4 +33,54 @@ async function getTouristSpot(req, res, next) {
   }
 }
 
-module.exports = { getAllTouristSpots, getTouristSpot };
+// patching a tourist spot
+async function patchTouristSpot(req, res, next) {
+  const { id } = req.params;
+
+  try {
+    const isValid = ObjectId.isValid(id);
+    if (!isValid) throw createHttpErrors(400, "Invalid Id");
+
+    const {
+      image,
+      touristSpotName,
+      countryName,
+      location,
+      shortDescription,
+      averageCost,
+      seasonality,
+      travelTime,
+      totalVisitorsPerYear,
+      userEmail,
+      userName,
+    } = req.body;
+
+    const changedField = {
+      ...(image && { image }),
+      ...(touristSpotName && { touristSpotName }),
+      ...(countryName && { countryName }),
+      ...(location && { location }),
+      ...(shortDescription && { shortDescription }),
+      ...(averageCost && { averageCost }),
+      ...(seasonality && { seasonality }),
+      ...(travelTime && { travelTime }),
+      ...(totalVisitorsPerYear && { totalVisitorsPerYear }),
+      ...(userEmail && { userEmail }),
+      ...(userName && { userName }),
+    };
+
+    const changedData = await touristSpotCollection.findOneAndUpdate(
+      { _id: ObjectId.createFromHexString(id) },
+      { $set: changedField },
+      { returnDocument: "after" }
+    );
+
+    if (!changedData) throw createHttpErrors(404, "Tourist spot not found");
+
+    res.status(200).json(changedData);
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { getAllTouristSpots, getTouristSpot, patchTouristSpot };

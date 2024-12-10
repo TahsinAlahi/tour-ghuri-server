@@ -5,7 +5,7 @@ router.route("/").get(touristSpotControllers.getAllTouristSpots).post();
 router
   .route("/:id")
   .get(touristSpotControllers.getTouristSpot)
-  .patch()
+  .patch(touristSpotControllers.patchTouristSpot)
   .delete();
 
 module.exports = router;
